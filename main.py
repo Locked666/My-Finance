@@ -3,6 +3,7 @@ import customtkinter as ctk
 import tkinter as tk 
 from tkinter import *
 import os 
+from CTkMessagebox import CTkMessagebox
 from PIL import Image, ImageDraw, ImageTk
 
 
@@ -106,43 +107,80 @@ class AppLogin(ctk.CTkFrame):
         
     def tela_login(self) :
         
+        def show_warning(menssagem:str):
+            # Show some retry/cancel warnings
+            msg = CTkMessagebox(title="Warning Message!", message=menssagem,
+                        icon="warning", option_1="Cancelar", option_2="Refazer")
+            
+            response = msg.get()
+            return response
+        
+        
         def click_login(event=None):
             
             if self.entry_user.get().strip() and self.entry_password.get().strip():
-                
-                print(f"Usuário = {self.entry_user.get()}\n Senha = {self.entry_password.get()}")
+                verifica_user()
                 self.entry_user.reset_default()
                 self.entry_password.reset_default()
                 self.entry_password.password_input()
-                
+             
+            ## Quando o usuário e senha estiverem vazio    
             elif  not self.entry_user.get().strip() and not self.entry_password.get().strip() :
-                print("Campo Usuário  e senha Vazio")
+                
                 self.entry_user.reset_default()
                 self.entry_user.show_waring()
                 self.entry_password.reset_default()
                 self.entry_password.show_waring()
+                self.entry_password.configure(show='*')
+                men = show_warning("Campo Usuário  e senha Vazio")
+                if men == "Refazer":
+                    self.entry_user.reset_default()
+                    self.entry_password.reset_default()
+                    self.entry_user.delete(0,END)
+                    self.entry_password.delete(0,END)
+                    self.entry_password.password_input()
+                    
                 
+            ## Quando o usuário estiver vazio     
             elif  not self.entry_user.get().strip():
-                print("Campo usuario  Vazio")
+                
                 self.entry_user.reset_default()
                 self.entry_user.show_waring()
-                
                 self.entry_password.reset_default()
                 self.entry_password.password_input()
                 
+                men = show_warning("Campo usuario  Vazio")
+                if men == "Refazer":
+                    self.entry_user.reset_default()
+                    self.entry_user.delete(0,END)
+
+                    
+            #Quando a senha estiver vazia     
             elif  not self.entry_password.get().strip():
-                print("Campo senha  Vazio")
-                
+
                 self.entry_user.reset_default()
                 self.entry_password.reset_default()
                 self.entry_password.show_waring()
                 self.entry_password.configure(show='*')
+                men = show_warning("Campo senha  Vazio")
+                
+                if men == "Refazer":
+                    self.entry_password.reset_default()
+                    self.entry_password.delete(0,END)
+                    self.entry_password.password_input()
                 
             else: 
-                print("Campos Vazios")
+                men = show_warning("Campos Vazios")
+                if men == "Refazer":
+                    self.entry_user.reset_default()
+                    self.entry_password.reset_default()
+                    self.entry_user.delete(0,END)
+                    self.entry_password.delete(0,END)
+                    self.entry_password.password_input()
             pass
         
-        def verifica_user(user,password):
+        def verifica_user():
+            print(f"Usuário = {self.entry_user.get()}\n Senha = {self.entry_password.get()}")
             
         
             
@@ -164,7 +202,7 @@ class AppLogin(ctk.CTkFrame):
         self.button_register = ctk.CTkButton(self,width=10,hover=False, text="Registrar", fg_color='transparent', command= lambda e=None: AppRegister(self.master_frame).pack())
         
         self.label_user.place(x=5,y=60)
-        self.entry_user.place(x=5,y=80)
+        self.entry_user.place(x=5,y=85)
         
         self.label_password.place(x=5,y=120)
         self.entry_password.place(x=5,y=140)
