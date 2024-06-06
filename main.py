@@ -14,6 +14,13 @@ global CURRENT_PATH
 global ICON_DIR
 global ICON_PATH
 
+global USER_TEST
+global USER_PASSWORD_TEST
+
+USER_TEST =  "juliosales"
+USER_PASSWORD_TEST = "juliolindo"
+
+
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 DIRECTORY_ASSESTS = os.path.join(CURRENT_PATH,'assets')
 ICON_DIR = os.path.join(DIRECTORY_ASSESTS,'imagens', "icons")
@@ -34,7 +41,6 @@ ICON_PATH = {
     "arrow": os.path.join(ICON_DIR, "arrow.png"),
     "image": os.path.join(ICON_DIR, "image.png"),
 }
-
 
 class EntryPassword(ctk.CTkEntry):
     def __init__(self, master: any, icon_width=20, icon_height=15, **kwargs):
@@ -95,9 +101,6 @@ class EntryPassword(ctk.CTkEntry):
             if widget_name.startswith("!ctklabel") or widget_name.startswith("!ctkbutton"):
                 widget.destroy()
 
-
-
-
 class AppLogin(ctk.CTkFrame):
     def __init__(self, master=None,width:int = 450):
         super().__init__(master)
@@ -119,6 +122,7 @@ class AppLogin(ctk.CTkFrame):
         def click_login(event=None):
             
             if self.entry_user.get().strip() and self.entry_password.get().strip():
+                
                 verifica_user()
                 self.entry_user.reset_default()
                 self.entry_password.reset_default()
@@ -179,12 +183,19 @@ class AppLogin(ctk.CTkFrame):
                     self.entry_password.password_input()
             pass
         
-        def verifica_user():
+        def verifica_user(event=None):
             print(f"Usuário = {self.entry_user.get()}\n Senha = {self.entry_password.get()}")
             
-        
+            usuario_login = self.entry_user.get().strip() 
+            password_login = self.entry_password.get().strip()
             
-            
+            if usuario_login == USER_TEST and password_login == USER_PASSWORD_TEST:
+                print("Login realizado com sucesso")
+            else:
+                msg = CTkMessagebox(title="Warning", message="Usuário ou senha incorretos",
+                        icon="cancel", option_1="Okay")
+  
+
             pass
         
         self.label = ctk.CTkLabel(self,text="Bem Vindo ao My Finance", font=('Arial',20))
@@ -210,11 +221,9 @@ class AppLogin(ctk.CTkFrame):
         self.button_login.place(x=5,y=170)
         self.button_register.place(x=200,y=170)
         
-        
-        
-        
-        
-        
+        self.entry_user.bind('<Return>',lambda e=None : self.entry_password.focus())
+        self.entry_password.bind('<Return>',lambda e=None : self.button_login.focus())
+        self.button_login.bind('<Return>',click_login)
         
         pass 
     
@@ -225,12 +234,31 @@ class AppLogin(ctk.CTkFrame):
  
 
 class AppRegister(ctk.CTkFrame):
-    def __init__(self, master=None):
-        super().__init__(master)
+    def __init__(self, master=None,width:int = 450):
+        super().__init__(master,width)
+        self.tela_register()
         
     def tela_register(self):
-        label = ctk.CTkLabel(self,text="teste register")
-        label.pack()
+        self.label = ctk.CTkLabel(self,text="Registro My Finance")
+        
+        self.label_name = ctk.CTkLabel(self, text="Nome Completo:")
+        self.entry_name = EntryPassword(self)
+        
+        self.label_email = ctk.CTkLabel(self,text="E-mail:")
+        self.entry_email = EntryPassword(self)
+        
+        self.label_phone = ctk.CTkLabel(self,text='Telefone:')
+        self.entry_phone = EntryPassword(self)
+        
+        self.label_user = ctk.CTkLabel(self,text="Usuário:")
+        self.entry_user = EntryPassword(self)
+        
+        self.label_password = ctk.CTkLabel(self,text="Senha:")
+        self.entry_password = EntryPassword(self)
+        
+        self.label_confirm_password = ctk.CTkLabel(self,text="Confirmar a Senha:")
+        self.entry_confirm_password  = EntryPassword(self)
+        
         pass     
     
     pass
@@ -267,3 +295,7 @@ class AppMain(ctk.CTk):
 if __name__=='__main__':
     root = AppMain()
     root.mainloop()
+    
+    
+    
+    
