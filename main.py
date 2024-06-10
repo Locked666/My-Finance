@@ -198,6 +198,12 @@ class AppLogin(ctk.CTkFrame):
 
             pass
         
+        def register_user(event=None):
+            #AppRegister(self.master_frame).pack()
+            self.pack_forget()
+            form_register = AppRegister(self.master_frame)
+            form_register.pack(expand=True, fill=BOTH)
+            pass
         self.label = ctk.CTkLabel(self,text="Bem Vindo ao My Finance", font=('Arial',20))
         self.label.place(x=10,y=2)
         
@@ -210,7 +216,7 @@ class AppLogin(ctk.CTkFrame):
         
         self.button_login = ctk.CTkButton(self, text="Login", command=click_login )
         
-        self.button_register = ctk.CTkButton(self,width=10,hover=False, text="Registrar", fg_color='transparent', command= lambda e=None: AppRegister(self.master_frame).pack())
+        self.button_register = ctk.CTkButton(self,width=10,hover=False, text="Registrar", fg_color='transparent', command= register_user )
         
         self.label_user.place(x=5,y=60)
         self.entry_user.place(x=5,y=85)
@@ -232,13 +238,18 @@ class AppLogin(ctk.CTkFrame):
         
         pass  
  
-
 class AppRegister(ctk.CTkFrame):
     def __init__(self, master=None,width:int = 450):
         super().__init__(master,width)
         self.tela_register()
+        self.master_frame = master
         
     def tela_register(self):
+        def back_login():
+            self.pack_forget()
+            frame_login = AppLogin(self.master_frame)
+            frame_login.pack(fill=BOTH, expand=True)
+            pass
         self.label = ctk.CTkLabel(self,text="Registro My Finance")
         
         self.label_name = ctk.CTkLabel(self, text="Nome Completo:")
@@ -258,6 +269,21 @@ class AppRegister(ctk.CTkFrame):
         
         self.label_confirm_password = ctk.CTkLabel(self,text="Confirmar a Senha:")
         self.entry_confirm_password  = EntryPassword(self)
+        
+        self.button_confirm = ctk.CTkButton(self,text="Confirme Registro")
+        
+        self.butto_back = ctk.CTkButton(self,  text="Voltar",command=back_login)
+        
+        
+        
+        
+        widgets = [self.label,self.label_name,self.entry_name,self.label_email,self.entry_email,self.label_phone,self.entry_phone,self.label_user,self.entry_user,self.label_password,
+                   self.entry_password, self.label_confirm_password, self.entry_confirm_password, self.button_confirm, self.butto_back]
+        
+        for i in widgets:
+            i.pack(expand=True,anchor=NW)
+        
+        
         
         pass     
     
@@ -288,6 +314,9 @@ class AppMain(ctk.CTk):
         if qt_users > 0:
             frame_login = AppLogin(self.frame_rigth)
             frame_login.pack(fill=BOTH, expand=True)
+        else:
+            frame_register = AppRegister(self.frame_rigth)
+            frame_register.pack(fill=BOTH, expand=True)
             
             
             
