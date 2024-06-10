@@ -1,7 +1,7 @@
 
 # Aplicativo My Finance. - Desktop. 
 
-Esse Aplicativo está desenvolvido afins de estudo sobre ciração de app desktops. 
+Esse Aplicativo está desenvolvido afins de estudo sobre criação de app desktops. 
 
 
 
