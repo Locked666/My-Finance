@@ -253,36 +253,64 @@ class AppRegister(ctk.CTkFrame):
         self.label = ctk.CTkLabel(self,text="Registro My Finance")
         
         self.label_name = ctk.CTkLabel(self, text="Nome Completo:")
-        self.entry_name = EntryPassword(self)
+        self.entry_name = EntryPassword(self,width=320)
         
         self.label_email = ctk.CTkLabel(self,text="E-mail:")
-        self.entry_email = EntryPassword(self)
+        self.entry_email = EntryPassword(self,width=320)
         
         self.label_phone = ctk.CTkLabel(self,text='Telefone:')
-        self.entry_phone = EntryPassword(self)
+        self.entry_phone = EntryPassword(self,width=320)
         
         self.label_user = ctk.CTkLabel(self,text="Usuário:")
-        self.entry_user = EntryPassword(self)
+        self.entry_user = EntryPassword(self,width=320)
         
         self.label_password = ctk.CTkLabel(self,text="Senha:")
-        self.entry_password = EntryPassword(self)
+        self.entry_password = EntryPassword(self,width=320)
         
         self.label_confirm_password = ctk.CTkLabel(self,text="Confirmar a Senha:")
-        self.entry_confirm_password  = EntryPassword(self)
+        self.entry_confirm_password  = EntryPassword(self,width=320)
         
-        self.button_confirm = ctk.CTkButton(self,text="Confirme Registro")
+        self.button_confirm = ctk.CTkButton(self,text="Confirme Registro",width=140)
         
-        self.butto_back = ctk.CTkButton(self,  text="Voltar",command=back_login)
+        self.button_back = ctk.CTkButton(self,  text="Voltar",width=140,command=back_login)
+        
+        self.entry_password.password_input()
+        self.entry_confirm_password.password_input()
+        
+        self.entry_confirm_password.grid()
         
         
+        #widgets = [self.label,self.label_name,self.entry_name,self.label_email,self.entry_email,self.label_phone,self.entry_phone,self.label_user,self.entry_user,self.label_password,
+        #           self.entry_password, self.label_confirm_password, self.entry_confirm_password, self.button_confirm, self.butto_back]
         
+        #for i in widgets:
+        #    i.grid()
         
-        widgets = [self.label,self.label_name,self.entry_name,self.label_email,self.entry_email,self.label_phone,self.entry_phone,self.label_user,self.entry_user,self.label_password,
-                   self.entry_password, self.label_confirm_password, self.entry_confirm_password, self.button_confirm, self.butto_back]
-        
-        for i in widgets:
-            i.pack(expand=True,anchor=NW)
-        
+        widgets = [
+            (self.label, 0, 0, 2),  # O título ocupa duas colunas
+            (self.label_name, 1, 0, 1),
+            (self.entry_name, 1, 1, 1),
+            (self.label_email, 2, 0, 1),
+            (self.entry_email, 2, 1, 1),
+            (self.label_phone, 3, 0, 1),
+            (self.entry_phone, 3, 1, 1),
+            (self.label_user, 4, 0, 1),
+            (self.entry_user, 4, 1, 1),
+            (self.label_password, 5, 0, 1),
+            (self.entry_password, 5, 1, 1),
+            (self.label_confirm_password, 6, 0, 1),
+            (self.entry_confirm_password, 6, 1, 1),
+            (self.button_confirm, 7, 0, 1),
+            (self.button_back, 7, 1, 1),
+        ]
+
+        # Adiciona widgets à grid
+        for widget, row, column, colspan in widgets:
+            widget.grid(row=row, column=column, columnspan=colspan, padx=5, pady=5, sticky="ew")
+
+        # Configura o peso das colunas para expandirem corretamente
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=2)
         
         
         pass     
