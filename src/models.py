@@ -116,7 +116,10 @@ def get_user(type:str,name:str = None,user:str= None,id:int=None):
         case "nome":
             return session.query(Usuarios).filter_by(nome = name).all()
         case "user":
-            return session.query(Usuarios).filter_by(usuario = user).all()
+            a = session.query(Usuarios).filter_by(usuario = user).all()
+            for usuario in a:
+                return usuario.nome, usuario.senha
+
         case "id":
             return session.query(Usuarios).filter_by(id = id).all()
         case "count": 
@@ -134,7 +137,7 @@ def get_user(type:str,name:str = None,user:str= None,id:int=None):
    
 
 if __name__=='__main__':
-   a =  get_user(type="count")
+   a =  get_user(type="user",user='juliosales')
    print(a)
   
 

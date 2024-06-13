@@ -192,8 +192,9 @@ class AppLogin(ctk.CTkFrame):
             
             usuario_login = self.entry_user.get().strip() 
             password_login = self.entry_password.get().strip()
-            
-            if usuario_login == USER_TEST and password_login == USER_PASSWORD_TEST:
+            louser = models.get_user(type='user',user=usuario_login)
+
+            if usuario_login == usuario_login and password_login == louser[1]:
                 print("Login realizado com sucesso")
             else:
                 msg = CTkMessagebox(title="Warning", message="Usuário ou senha incorretos",
