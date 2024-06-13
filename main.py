@@ -3,19 +3,23 @@ import customtkinter as ctk
 import tkinter as tk 
 from tkinter import *
 import os 
+from pathlib import Path
+from src.config_app import APP_CONFIG_NAME, AUTH_USER_SAVE, AUTH_USER_PASS_SAVE
 from CTkMessagebox import CTkMessagebox
 from PIL import Image, ImageDraw, ImageTk
+from src import models
 
-
-# Variaveis Globais. 
-
+# Variaveis Globais.
 global DIRECTORY_ASSESTS
 global CURRENT_PATH
 global ICON_DIR
 global ICON_PATH
 
+
 global USER_TEST
-global USER_PASSWORD_TEST
+global USER_PASSWORD_TEST 
+
+
 
 USER_TEST =  "juliosales"
 USER_PASSWORD_TEST = "juliolindo"
@@ -194,9 +198,7 @@ class AppLogin(ctk.CTkFrame):
             else:
                 msg = CTkMessagebox(title="Warning", message="Usuário ou senha incorretos",
                         icon="cancel", option_1="Okay")
-  
 
-            pass
         
         def register_user(event=None):
             #AppRegister(self.master_frame).pack()
@@ -204,7 +206,8 @@ class AppLogin(ctk.CTkFrame):
             form_register = AppRegister(self.master_frame)
             form_register.pack(expand=True, fill=BOTH)
             pass
-        self.label = ctk.CTkLabel(self,text="Bem Vindo ao My Finance", font=('Arial',20))
+        
+        self.label = ctk.CTkLabel(self,text=f"Bem Vindo ao {APP_CONFIG_NAME}", font=('Arial',20))
         self.label.place(x=10,y=2)
         
         self.label_user = ctk.CTkLabel(self,text="Usuário:", font=("Arial",12))
@@ -214,18 +217,21 @@ class AppLogin(ctk.CTkFrame):
         self.entry_password = EntryPassword(self,width=320,show ='*')
         self.entry_password.password_input()
         
+        self.check_save_login = ctk.CTkCheckBox(self, text="Salvar Login")
+        
         self.button_login = ctk.CTkButton(self, text="Login", command=click_login )
         
-        self.button_register = ctk.CTkButton(self,width=10,hover=False, text="Registrar", fg_color='transparent', command= register_user )
+        self.button_register = ctk.CTkButton(self,hover=False, text="Registrar",  command= register_user )
         
-        self.label_user.place(x=5,y=60)
-        self.entry_user.place(x=5,y=85)
+        self.label_user.place(x=5,y=90)
+        self.entry_user.place(x=5,y=115)
         
-        self.label_password.place(x=5,y=120)
-        self.entry_password.place(x=5,y=140)
+        self.label_password.place(x=5,y=150)
+        self.entry_password.place(x=5,y=175)
+        self.check_save_login.place(x=5, y=215)
         
-        self.button_login.place(x=5,y=170)
-        self.button_register.place(x=200,y=170)
+        self.button_login.place(x=5,y=270)
+        self.button_register.place(x=200,y=270)
         
         self.entry_user.bind('<Return>',lambda e=None : self.entry_password.focus())
         self.entry_password.bind('<Return>',lambda e=None : self.button_login.focus())
@@ -233,16 +239,14 @@ class AppLogin(ctk.CTkFrame):
         
         pass 
     
-    def widget_login(self):
-        
-        
-        pass  
- 
+
 class AppRegister(ctk.CTkFrame):
-    def __init__(self, master=None,width:int = 450):
+    def __init__(self, master=None,width:int = 450,prime_user: bool = False ):
         super().__init__(master,width)
-        self.tela_register()
         self.master_frame = master
+        self.prime_user = prime_user
+        self.tela_register()
+        
         
     def tela_register(self):
         def back_login():
@@ -250,7 +254,84 @@ class AppRegister(ctk.CTkFrame):
             frame_login = AppLogin(self.master_frame)
             frame_login.pack(fill=BOTH, expand=True)
             pass
-        self.label = ctk.CTkLabel(self,text="Registro My Finance")
+        
+        def callback_register_user():
+            def restart_entrys():
+                self.entry_name.reset_default()
+                self.entry_user.reset_default()
+                self.entry_password.reset_default()
+                self.entry_confirm_password.reset_default()
+                
+                #self.entry_confirm_password.password_input()
+                #self.entry_password.password_input()
+                
+                pass
+            
+            def save_register_user():
+                try:
+                    if models.get_user(type='user_filter', user=user)== 0 :
+                        models.new_user(
+                            bussines= 1, 
+                            name=name_user,
+                            user=user,
+                            password=password,
+                            email=email_user,
+                            phone=phone_user
+                            )
+                        msg = CTkMessagebox(title="Sucesso", message=f"Usuário foi cadastrado com sucesso !",
+                        icon="check", option_1="Okay") 
+                        back_login()
+                    else:
+                         msg = CTkMessagebox(title="Warning", message=f"Usuário Já cadastrado",
+                        icon="cancel", option_1="Okay")
+                                
+                except ValueError as error: msg = CTkMessagebox(title="Warning", message=f"Ocorreu um erro ao salvar usuário\n {error}",
+                        icon="cancel", option_1="Okay")   
+                
+                
+            name_user = self.entry_name.get().strip()
+            email_user = self.entry_email.get().strip()
+            phone_user = self.entry_phone.get().strip()
+            user = self.entry_user.get().strip().strip()
+            password = self.entry_password.get().strip()
+            confirm_password = self.entry_confirm_password.get().strip()
+            
+            variaveis =  [
+                {name_user:self.entry_name},
+                {user: self.entry_user},
+                {password: self.entry_password},
+                {confirm_password: self.entry_confirm_password}
+                ]
+            label_info = ctk.CTkLabel(self, text="",font=("Arial",17), text_color="red")
+            
+            last_row = self.button_confirm.grid_info()["row"]
+            
+            label_info.grid(row=int(last_row) + 1, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
+            
+
+            for variavel in variaveis:
+                for chave,valor in variavel.items():
+                    if not chave:
+                        valor.reset_default()
+                        valor.show_waring()
+                        if valor == self.entry_password or self.entry_confirm_password:
+                            valor.configure(show='*')                       
+            
+            if password != confirm_password:
+                restart_entrys()
+                self.entry_password.show_waring()
+                self.entry_password.password_input()
+                self.entry_confirm_password.show_waring()
+                self.entry_confirm_password.password_input()
+                label_info.configure(text='As senhas não são iguais.',font=("Arial",18))
+                
+            else:
+                if password != '' and confirm_password != '': 
+                    save_register_user() 
+                
+
+        
+        self.label = ctk.CTkLabel(self,text=f"Registro {APP_CONFIG_NAME}")
         
         self.label_name = ctk.CTkLabel(self, text="Nome Completo:")
         self.entry_name = EntryPassword(self,width=320)
@@ -265,27 +346,20 @@ class AppRegister(ctk.CTkFrame):
         self.entry_user = EntryPassword(self,width=320)
         
         self.label_password = ctk.CTkLabel(self,text="Senha:")
-        self.entry_password = EntryPassword(self,width=320)
+        self.entry_password = EntryPassword(self,width=320,show='*')
         
         self.label_confirm_password = ctk.CTkLabel(self,text="Confirmar a Senha:")
         self.entry_confirm_password  = EntryPassword(self,width=320)
         
-        self.button_confirm = ctk.CTkButton(self,text="Confirme Registro",width=140)
+        self.button_confirm = ctk.CTkButton(self,text="Confirme Registro",width=140, command=callback_register_user)
         
         self.button_back = ctk.CTkButton(self,  text="Voltar",width=140,command=back_login)
-        
+                
         self.entry_password.password_input()
         self.entry_confirm_password.password_input()
         
         self.entry_confirm_password.grid()
-        
-        
-        #widgets = [self.label,self.label_name,self.entry_name,self.label_email,self.entry_email,self.label_phone,self.entry_phone,self.label_user,self.entry_user,self.label_password,
-        #           self.entry_password, self.label_confirm_password, self.entry_confirm_password, self.button_confirm, self.butto_back]
-        
-        #for i in widgets:
-        #    i.grid()
-        
+
         widgets = [
             (self.label, 0, 0, 2),  # O título ocupa duas colunas
             (self.label_name, 1, 0, 1),
@@ -312,12 +386,17 @@ class AppRegister(ctk.CTkFrame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=2)
         
-        
+        if self.prime_user == True:
+            self.button_back.grid_forget()
+            self.button_confirm.grid_configure(columnspan=3)
+            
         pass     
     
     pass
 
 class AppMain(ctk.CTk):
+    
+    
     def __init__(self, fg_color: str | Tuple[str, str] | None = None, **kwargs):
         super().__init__(fg_color, **kwargs)
         self.tela_main()
@@ -325,11 +404,11 @@ class AppMain(ctk.CTk):
     
     def tela_main(self):
         self.geometry("900x600")
-        self.title("My Finance")
+        self.title(f"{APP_CONFIG_NAME}")
         self.resizable(False,False)
         
     def widgets_tela_main(self):
-        qt_users = 1
+        qt_users = models.get_user(type="count")
         frame_login = None
         frame_register = None
         self.frame_left = ctk.CTkFrame(self,width=450)
@@ -338,15 +417,14 @@ class AppMain(ctk.CTk):
         self.frame_rigth =  ctk.CTkFrame(self,width=450)
         self.frame_rigth.pack(side=RIGHT,fill=BOTH,expand=TRUE)
         
+
         
         if qt_users > 0:
             frame_login = AppLogin(self.frame_rigth)
             frame_login.pack(fill=BOTH, expand=True)
         else:
-            frame_register = AppRegister(self.frame_rigth)
+            frame_register = AppRegister(self.frame_rigth,prime_user=True)
             frame_register.pack(fill=BOTH, expand=True)
-            
-            
             
 
 if __name__=='__main__':
