@@ -1,7 +1,7 @@
 from typing import Tuple
 import customtkinter as ctk
 import os
-from config_app import *
+from .config_app import *
 from PIL import Image
 
 class AppHome(ctk.CTkToplevel):
@@ -234,6 +234,7 @@ class AppHome(ctk.CTkToplevel):
 
 
 if __name__ == "__main__":
-   app = AppHome()
+   app = ctk.CTk()
+   home = AppHome()
    app.mainloop()
  

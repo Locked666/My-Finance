@@ -8,6 +8,7 @@ from src.config_app import APP_CONFIG_NAME, AUTH_USER_SAVE, AUTH_USER_PASS_SAVE
 from CTkMessagebox import CTkMessagebox
 from PIL import Image, ImageDraw, ImageTk
 from src import models
+from src.home import AppHome
 
 # Variaveis Globais.
 global DIRECTORY_ASSESTS
@@ -195,7 +196,9 @@ class AppLogin(ctk.CTkFrame):
             louser = models.get_user(type='user',user=usuario_login)
 
             if usuario_login == usuario_login and password_login == louser[1]:
-                print("Login realizado com sucesso")
+                self.master_frame.master.withdraw()
+                home =  AppHome()
+                
             else:
                 msg = CTkMessagebox(title="Warning", message="Usuário ou senha incorretos",
                         icon="cancel", option_1="Okay")
