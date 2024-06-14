@@ -431,7 +431,3 @@ class AppMain(ctk.CTk):
 if __name__=='__main__':
     root = AppMain()
     root.mainloop()
-    
-    
-    
-    
