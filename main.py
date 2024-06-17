@@ -194,7 +194,7 @@ class AppLogin(ctk.CTkFrame):
             usuario_login = self.entry_user.get().strip() 
             password_login = self.entry_password.get().strip()
             louser = models.get_user(type='user',user=usuario_login)
-
+            
             if usuario_login == usuario_login and password_login == louser[1]:
                 self.master_frame.master.withdraw()
                 home =  AppHome()
