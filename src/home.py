@@ -1,8 +1,11 @@
 from typing import Tuple
 import customtkinter as ctk
 import os
-from .config_app import *
 from PIL import Image
+try :   
+    from .config_app import *
+except: 
+    from config_app import *   
 
 class AppHome(ctk.CTkToplevel):
     def __init__(self, *args, fg_color: str | Tuple[str, str] | None = None, **kwargs):
@@ -63,7 +66,7 @@ class AppHome(ctk.CTkToplevel):
 
         self.home_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Home",
                                                    fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                   image=self.home_image, anchor="w", command=self.home_button_event)
+                                                   image=self.home_image, anchor="w", command=lambda e=None: self.select_frame_by_name("home"))#self.home_button_event)
         self.home_button.grid(row=1, column=0, sticky="ew")
         
         
@@ -115,6 +118,9 @@ class AppHome(ctk.CTkToplevel):
         # create home frame
         self.home_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.home_frame.grid_columnconfigure(0, weight=1)
+        
+        self.label_teste = ctk.CTkLabel(self.home_frame,text='teste')
+        self.label_teste.pack(anchor='center',pady=100)
 
         # self.home_frame_large_image_label = ctk.CTkLabel(self.home_frame, text="", image=self.large_test_image)
         # self.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
@@ -205,8 +211,8 @@ class AppHome(ctk.CTkToplevel):
         else:
             self.settings_frame.grid_forget()
 
-    def home_button_event(self):
-        self.select_frame_by_name("home")
+   # def home_button_event(self):
+    #    self.select_frame_by_name("home")
 
     def dashboard_button_event(self):
         self.select_frame_by_name("dashboard")
