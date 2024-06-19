@@ -2,6 +2,7 @@ from typing import Tuple
 import customtkinter as ctk
 import os
 from PIL import Image
+
 try :   
     from .config_app import *
 except: 
@@ -54,6 +55,9 @@ class AppHome(ctk.CTkToplevel):
         
         self.config_image = ctk.CTkImage(light_image=Image.open(os.path.join(image_path, "config_dark.png")),
                                                      dark_image=Image.open(os.path.join(image_path, "config_light.png")), size=(30, 30))
+        
+        self.eyes_image = ctk.CTkImage(light_image=Image.open(os.path.join(image_path, "eye1_black.png")),
+                                                     dark_image=Image.open(os.path.join(image_path, "eye1_white.png")), size=(10, 10))
 
         # create navigation frame
         self.navigation_frame = ctk.CTkFrame(self, corner_radius=0)
@@ -66,48 +70,48 @@ class AppHome(ctk.CTkToplevel):
 
         self.home_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Home",
                                                    fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                   image=self.home_image, anchor="w", command=lambda e=None: self.select_frame_by_name("home"))#self.home_button_event)
+                                                   image=self.home_image, anchor="w", command=lambda e=None: self.select_frame_by_name("home"))
         self.home_button.grid(row=1, column=0, sticky="ew")
         
         
 
         self.dashboard_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Dashboard",
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=self.dashboard_image, anchor="w", command=self.dashboard_button_event)
+                                                      image=self.dashboard_image, anchor="w", command= lambda e=None: self.select_frame_by_name("dashboard")) #self.dashboard_button_event)
         self.dashboard_button.grid(row=2, column=0, sticky="ew")
         
         self.revenue_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Receita",
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=self.revenue_image, anchor="w", command=self.revenue_button_event)
+                                                      image=self.revenue_image, anchor="w", command=lambda e=None: self.select_frame_by_name("revenue"))#self.revenue_button_event)
         self.revenue_button.grid(row=3, column=0, sticky="ew")
         
         self.expense_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Despesa",
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=self.expense_image, anchor="w", command=self.expense_button_event)
+                                                      image=self.expense_image, anchor="w", command=lambda e=None: self.select_frame_by_name("expense"))# self.expense_button_event)
         self.expense_button.grid(row=4, column=0, sticky="ew")
 
 
         self.invest_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Investimento",
                                                        fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                       image=self.investimento_image, anchor="w", command=self.invest_button_event)
+                                                       image=self.investimento_image, anchor="w", command=lambda e=None: self.select_frame_by_name("invest"))#self.invest_button_event)
         self.invest_button.grid(row=5, column=0, sticky="ew")
         
         
         self.inventory_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Inventário",
                                                        fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                       image=self.inventario_image, anchor="w", command=self.inventory_button_event)
+                                                       image=self.inventario_image, anchor="w", command=lambda e=None: self.select_frame_by_name("inventory"))#self.inventory_button_event)
         self.inventory_button.grid(row=6, column=0, sticky="ew")
         
         
         self.wallet_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Carteira",
                                                        fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                       image=self.wallet_image, anchor="w", command=self.wallet_button_event)
+                                                       image=self.wallet_image, anchor="w", command=lambda e=None: self.select_frame_by_name("wallet"))#self.wallet_button_event)
         self.wallet_button.grid(row=7, column=0, sticky="ew")
         
         
         self.settings_button = ctk.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Configuração",
                                                        fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                       image=self.config_image, anchor="w", command=self.settings_button_event)
+                                                       image=self.config_image, anchor="w", command=lambda e=None: self.select_frame_by_name("settings"))#self.settings_button_event)
         self.settings_button.grid(row=8, column=0,  sticky="ws")
 
 
@@ -117,22 +121,21 @@ class AppHome(ctk.CTkToplevel):
 
         # create home frame
         self.home_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.home_frame.grid_columnconfigure(0, weight=1)
         
-        self.label_teste = ctk.CTkLabel(self.home_frame,text='teste')
-        self.label_teste.pack(anchor='center',pady=100)
-
-        # self.home_frame_large_image_label = ctk.CTkLabel(self.home_frame, text="", image=self.large_test_image)
-        # self.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
-
-        # self.home_frame_button_1 = ctk.CTkButton(self.home_frame, text="", image=self.image_icon_image)
-        # self.home_frame_button_1.grid(row=1, column=0, padx=20, pady=10)
-        # self.home_frame_button_2 = ctk.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="right")
-        # self.home_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
-        # self.home_frame_button_3 = ctk.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="top")
-        # self.home_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
-        # self.home_frame_button_4 = ctk.CTkButton(self.home_frame, text="CTkButton", image=self.image_icon_image, compound="bottom", anchor="w")
-        # self.home_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
+        #self.home_frame.grid_columnconfigure(1, weight=1)
+        #self.home_frame.grid_rowconfigure(3,weight=1, uniform=True)
+        
+        self.home_frame.grid_rowconfigure(0, minsize=20)  # Espaçamento superior de 20 pixels
+        
+        # Configura as colunas para espaçamento entre os frames
+        self.home_frame.grid_columnconfigure(0, weight=1)  # Espaçamento antes do primeiro frame
+        self.home_frame.grid_columnconfigure(1, weight=0,minsize=20)  # Primeiro frame
+        self.home_frame.grid_columnconfigure(2, weight=1)  # Espaçamento entre primeiro e segundo frame
+        self.home_frame.grid_columnconfigure(3, weight=0,minsize=20)  # Segundo frame
+        self.home_frame.grid_columnconfigure(4, weight=1)  # Espaçamento entre segundo e terceiro frame
+        self.home_frame.grid_columnconfigure(5, weight=0,minsize=20)  # Terceiro frame
+        self.home_frame.grid_columnconfigure(6, weight=1)  # Espaçamento depois do terceiro frame
+        
 
         # create second frame
         self.dashboard_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -153,6 +156,49 @@ class AppHome(ctk.CTkToplevel):
         # select default frame
         self.select_frame_by_name("home")
 
+    def _layout_display_home(self):
+        self.urgent_warning = ctk.CTkFrame(self.home_frame, width=218,height=90,border_width=2,corner_radius=8)
+        
+        self.green_warning = ctk.CTkFrame(self.home_frame, width=218,height=90,border_width=2,corner_radius=8)
+        
+        self.yellow_warning = ctk.CTkFrame(self.home_frame, width=218,height=90,border_width=2,corner_radius=8)
+        
+        self.urgent_warning.grid(row=1, column=1, padx=10, pady=10)      
+        self.green_warning.grid(row=1, column=3, padx=10, pady=10)
+        
+        self.yellow_warning.grid(row=1, column=5, padx=10, pady=10)
+        # -----------------------------------------------------------
+        self.label_urgent_value = ctk.CTkLabel(self.urgent_warning,text=f"0",font=('Arial',18))
+        
+        self.button_urgent = ctk.CTkButton(self.urgent_warning,text='',width=10,height=10,image=self.eyes_image,compound='left')
+        
+        self.label_urgent_value.grid(row=1,column=1)
+        self.button_urgent.grid(row=1,column=3)
+        #-------------------------#
+        
+        self.label_yellow_value = ctk.CTkLabel(self.yellow_warning,text=f"0",font=('Arial',18))
+        
+        self.button_yellow= ctk.CTkButton(self.yellow_warning,text='',width=10,height=10,image=self.eyes_image,compound='left')
+        
+        self.label_yellow_value.grid(row=1,column=1)
+        self.button_yellow.grid(row=1,column=3)
+        
+        ####################### -##########
+        self.label_green_value = ctk.CTkLabel(self.green_warning,text=f"0",font=('Arial',18))
+        
+        self.button_green = ctk.CTkButton(self.green_warning,text='',width=10,height=10,image=self.eyes_image,compound='left')
+        
+        self.label_green_value.grid(row=1,column=1)
+        self.button_green.grid(row=1,column=3)
+        
+    def _layout_display_revenue(self):
+      
+       self.button_add_revenue = ctk.CTkButton(self.revenue_frame,text='' )
+        
+        
+    
+
+    
     def select_frame_by_name(self, name):
         # set button color for selected button
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
@@ -174,6 +220,7 @@ class AppHome(ctk.CTkToplevel):
         # show selected frame
         if name == "home":
             self.home_frame.grid(row=0, column=1, sticky="nsew")
+            self._layout_display_home()
         else:
             self.home_frame.grid_forget()
         if name == "dashboard":
@@ -211,29 +258,6 @@ class AppHome(ctk.CTkToplevel):
         else:
             self.settings_frame.grid_forget()
 
-   # def home_button_event(self):
-    #    self.select_frame_by_name("home")
-
-    def dashboard_button_event(self):
-        self.select_frame_by_name("dashboard")
-
-    def invest_button_event(self):
-        self.select_frame_by_name("invest")
-        
-    def inventory_button_event(self):
-        self.select_frame_by_name("inventory")
-        
-    def wallet_button_event(self):
-        self.select_frame_by_name("wallet")
-        
-    def expense_button_event(self):
-        self.select_frame_by_name("expense")
-        
-    def revenue_button_event(self):
-        self.select_frame_by_name("revenue")
-        
-    def settings_button_event(self):
-        self.select_frame_by_name("settings")
 
     def change_appearance_mode_event(self, new_appearance_mode):
         ctk.set_appearance_mode(new_appearance_mode)
