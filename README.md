@@ -48,4 +48,5 @@ Esse Aplicativo está desenvolvido afins de estudo sobre criação de app deskto
 ## Autores
 
 - [@Julio Sales ](https://github.com/Locked666)
+- ngrok config add-authtoken 2iROebGG6SvT37DdbzPQ2wFWWA4_3ak4HL6LmPo3qD6GVTp97
 
