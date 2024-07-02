@@ -1,6 +1,9 @@
 from typing import Tuple
 import customtkinter as ctk
 import os
+from CTkTable import *
+from form_revenue import FormRevenue
+from form_expense import FormExpense
 from PIL import Image
 
 try :   
@@ -192,8 +195,58 @@ class AppHome(ctk.CTkToplevel):
         self.button_green.grid(row=1,column=3)
         
     def _layout_display_revenue(self):
-      
-       self.button_add_revenue = ctk.CTkButton(self.revenue_frame,text='' )
+       
+       def returno(e=None):
+           a = self.table_revenue.get()
+           b= self.table_revenue.get_selected_row()
+           c = self.table_revenue.get_selected_column()
+           
+           print(f"get: {a}")
+           print('----------------------------------------------')
+           print(f"get_selected_row: {b}")
+           print('----------------------------------------------')
+           print(f"get_selected_column: {c}")
+           print('----------------------------------------------')
+           print(f"varavel retornada : {e}")
+           print('----------------------------------------------')
+           print(f"varavel value : {e['value']}")
+           print('----------------------------------------------')
+           print(f"varavel value row : {e['row']}")
+           print('----------------------------------------------')
+           print(f"varavel value row, colum selected : {self.table_revenue.get(row=e['row'])}")
+           print('----------------------------------------------')
+           print(f"varavel value row: {self.table_revenue.get_row(row=e['row'])}")
+           self.table_revenue.draw_table()
+           self.table_revenue.select_row(row=e['row'])
+           print('--------------------------------------------')
+           
+           
+           #print(f"varavel value row, colum selected : {self.table_revenue.select(row=e['row'],column=e['column'])}")
+           
+       self.ctkbox = ctk.CTkCheckBox(self.revenue_frame,text=())     
+       value = [[1,2,3,4,5],
+                [6,7,8,9,10],
+                [11,12,13,14,15],
+                [16,17,18,19,20],
+                [21,22,23,24,25]]
+
+        
+            
+       def callback_button_add_revenue():
+           app_revenue = FormRevenue()
+           
+           
+           app_revenue.focus_force()     
+           
+
+       self.button_add_revenue = ctk.CTkButton(self.revenue_frame,text='', command=callback_button_add_revenue )
+       
+       self.table_revenue = CTkTable(self.revenue_frame,values=value,hover=True,hover_color='#000000',command=returno)
+       
+       
+       self.button_add_revenue.grid(column=0,row=0)
+       
+       self.table_revenue.grid(column=0,row=1)
         
         
     
@@ -245,6 +298,7 @@ class AppHome(ctk.CTkToplevel):
             
         if name == "revenue":
             self.revenue_frame.grid(row=0, column=1, sticky="nsew")
+            self._layout_display_revenue()
         else:
             self.revenue_frame.grid_forget()
             
