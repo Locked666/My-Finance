@@ -158,8 +158,7 @@ def get_user(type:str,name:str = None,user:str= None,id:int=None):
    
 
 if __name__=='__main__':
-#    a =  get_user(type="user",user='juliosales')
-#    print(a)
+
   Base.metadata.create_all(bind=engine) 
 
           

@@ -9,6 +9,9 @@ __pycache__/
 # DataBase
 *database.db
 
+#teste
+./teste/*
+
 
 # Distribution / packaging
 .Python

@@ -12,16 +12,32 @@ except:
     from config_app import * 
 
 class FormRevenue(ctk.CTkToplevel):
-    def __init__(self,id:int = None, *args, fg_color: str | Tuple[str, str] | None = None, **kwargs):
+    def __init__(self,id:int = None,master : any = None, *args, fg_color: str | Tuple[str, str] | None = None, **kwargs):
         super().__init__(*args, fg_color=fg_color, **kwargs)
         self.id_revenue = id 
         if self.id_revenue:
             self._add_revenue_info()
-        
-        self._conf_display()
-        self.geometry("400x500")
+
         self.resizable(False,False)
+        width = 400
+        height = 500
+        
+        self.master_window = master
+     
+        self.width = 250 if width<250 else width
+        self.height = 150 if height<150 else  height
             
+        if self.master_window is None:
+            self.spawn_x = int((self.winfo_screenwidth()-self.width)/2)
+            self.spawn_y = int((self.winfo_screenheight()-self.height)/2)
+        else:
+            self.spawn_x = int(self.master_window.winfo_width() * .5 + self.master_window.winfo_x() - .5 * self.width + 7)
+            self.spawn_y = int(self.master_window.winfo_height() * .5 + self.master_window.winfo_y() - .5 * self.height + 20)
+            
+        
+        self.geometry(f"{self.width}x{self.height}+{self.spawn_x}+{self.spawn_y}")
+        self._conf_display() 
+        self.grab_set()
     def _pop_calendario(self):
         self.pop = ctk.CTkToplevel(
             self,
@@ -159,6 +175,9 @@ class FormRevenue(ctk.CTkToplevel):
         
         self.entry_date_revenue.bind("<Return>",lambda event=None: self._format_date(widget=self.entry_date_revenue))
         self.entry_date_revenue.bind("<Return>",lambda event=None: self.entry_descri_revenue.focus())
+        
+        self.entry_descri_revenue.bind("<Return>",lambda e=None: self.button_confirm_revenue.focus())
+        self.button_confirm_revenue.bind("<Return>", lambda e=None: self.button_confirm_revenue._clicked())
         
         self.switch_state_revenue.select()
         __switch_event()

@@ -2,6 +2,7 @@ from typing import Tuple
 import customtkinter as ctk
 import os
 from CTkTable import *
+from CTkMenuBar import *
 from PIL import Image
 
 try :   
@@ -198,7 +199,7 @@ class AppHome(ctk.CTkToplevel):
         self.button_green.grid(row=1,column=3)
         
     def _layout_display_revenue(self):
-       
+
        def returno(e=None):
            a = self.table_revenue.get()
            b= self.table_revenue.get_selected_row()
@@ -237,8 +238,7 @@ class AppHome(ctk.CTkToplevel):
             
        def callback_button_add_revenue():
            if self.app_revenue is None or not self.app_revenue.winfo_exists():
-            self.app_revenue = FormRevenue()
-            self.app_revenue.focus_set
+            self.app_revenue = FormRevenue(master=self.revenue_frame)
            else:
                self.app_revenue.focus() 
            
@@ -251,11 +251,11 @@ class AppHome(ctk.CTkToplevel):
        self.table_revenue = CTkTable(self.revenue_frame,values=value,hover=True,hover_color='#000000',command=returno)
        
        
-       self.button_add_revenue.grid(column=0,row=0)
+       self.button_add_revenue.grid(row=0)
        
-       self.table_revenue.grid(column=0,row=1)
+       self.table_revenue.grid(row=1)
         
-    
+        
     def select_frame_by_name(self, name):
         # set button color for selected button
         self.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
