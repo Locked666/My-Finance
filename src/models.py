@@ -2,6 +2,11 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime, Date, F
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
+from datetime import datetime,date
+try:
+    from config_app import MODE_DEBUG
+except:
+    from .config_app import MODE_DEBUG    
 import os 
 from pathlib import Path
 
@@ -12,7 +17,7 @@ path_db = os.path.join(PATH, 'database', 'database.db')
 
 CONN = f"sqlite:///{path_db}"
 
-engine = create_engine(CONN,echo=True)
+engine = create_engine(CONN,echo=MODE_DEBUG)
 Session =  sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
@@ -132,7 +137,7 @@ def new_user(bussines:int,name:str, user:str,password:str, email:str ='', phone:
     session.commit()
     pass
 
-def get_user(type:str,name:str = None,user:str= None,id:int=None):
+def get_user(type:str=None,name:str = None,user:str= None,id:int=None):
     match type:
         case "nome":
             return session.query(Usuarios).filter_by(nome = name).all()
@@ -153,13 +158,41 @@ def get_user(type:str,name:str = None,user:str= None,id:int=None):
         case _:
             return session.query(Usuarios).all()
         
+def new_revenue(bussines:int,descricao:str, value:Float, datepag:str,recived:bool, date:str, datelanc:str):
+    try:
+        
+        data_pag_obj = datetime.strptime(datepag, "%Y-%m-%d").date()
+        data_obj = datetime.strptime(date, "%Y-%m-%d").date()
+        if isinstance(datelanc, str):
+            data_lanc_obj = datetime.strptime(datelanc, "%Y-%m-%d %H:%M:%S")
+        else:
+            data_lanc_obj = datelanc
+        
+    
+        nova_receita  = Receitas(
+            empresa_id=bussines,
+            descricao=descricao, 
+            valor=value,
+            data_pag=data_pag_obj, 
+            recebido=recived,
+            data=data_obj,
+            data_lanc=data_lanc_obj)
+        session.add(nova_receita)
+        session.commit()
+        return(True,nova_receita.id)
+        
+    except  ValueError as e: 
+        session.rollback()
+        return (False, str(e))   
 
-
+    
    
 
 if __name__=='__main__':
+    a = get_user(type='count')
+    print(a)
+    
 
-  Base.metadata.create_all(bind=engine) 
 
           
     

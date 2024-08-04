@@ -8,8 +8,12 @@ from datetime import datetime
 from PIL import Image
 try :   
     from .config_app import *
+    from .models import *
+    from .func import * 
 except: 
     from config_app import * 
+    from models import *
+    from func import *
 
 class FormRevenue(ctk.CTkToplevel):
     def __init__(self,id:int = None,master : any = None, *args, fg_color: str | Tuple[str, str] | None = None, **kwargs):
@@ -222,9 +226,10 @@ class FormRevenue(ctk.CTkToplevel):
                         
                 case 1:
                     if self.date_revenue_data:
-                        if self.date_revenue_data < hoje:
-                            error_log.append("Não poderá ser lançada receita com a data anterior a atual")
-                            pass
+                        pass
+                        # if self.date_revenue_data < hoje:
+                        #     error_log.append("Não poderá ser lançada receita com a data anterior a atual")
+                        #     pass
                     else:
                         error_log.append('O campo data não pode estar Vazio') 
                         
@@ -257,8 +262,31 @@ class FormRevenue(ctk.CTkToplevel):
  
     
     def _save_revenue_data(self):
-        msg = CTkMessagebox(title="Sucesso", message=f"Receita Gerada com sucesso. !",
-                        icon="check", option_1="Okay") 
+        
+        
+        date_revenue =  convert_date(self.date_revenue_data)
+        if self.switch_revenue_data == 0:
+            recived = True
+        else:
+            recived = False
+        add = new_revenue(
+            bussines=1,
+            descricao=self.descri_revenue_data, 
+            value=self.value_revenue_data.replace(',','.'), 
+            datepag=date_revenue,
+            recived=recived, 
+            date = date_revenue, 
+            datelanc = r_date_atual(type='HoraMinuto') 
+        )
+        
+        if add[0] == True: 
+
+            msg = CTkMessagebox(title="Sucesso", message=f"Receita Nº {add[1]} \nGerada com sucesso. !!!",
+                            icon="check", option_1="Okay")
+            self.destroy() 
+        else: 
+               sg = CTkMessagebox(title="Erro", message=f"Erro ao Salvar receita.\n {add[1]} !!!",
+                            icon="cancel", option_1="Okay") 
         
         
     
