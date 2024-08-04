@@ -2,20 +2,23 @@ from typing import Tuple
 import customtkinter as ctk
 import os
 from CTkTable import *
-from form_revenue import FormRevenue
-from form_expense import FormExpense
 from PIL import Image
 
 try :   
     from .config_app import *
+    from .form_revenue import FormRevenue
+    from .form_expense import FormExpense
 except: 
-    from config_app import *   
+    from config_app import *
+    from form_revenue import FormRevenue
+    from form_expense import FormExpense   
 
 class AppHome(ctk.CTkToplevel):
     def __init__(self, *args, fg_color: str | Tuple[str, str] | None = None, **kwargs):
         super().__init__(*args, fg_color=fg_color, **kwargs)
         self._config_display()
         self._config_layout()
+        self.app_revenue = None
         
     def _config_display(self):
         self.title(f"Bem vindo ao {APP_CONFIG_NAME}")
@@ -233,10 +236,14 @@ class AppHome(ctk.CTkToplevel):
         
             
        def callback_button_add_revenue():
-           app_revenue = FormRevenue()
+           if self.app_revenue is None or not self.app_revenue.winfo_exists():
+            self.app_revenue = FormRevenue()
+            self.app_revenue.focus_set
+           else:
+               self.app_revenue.focus() 
            
            
-           app_revenue.focus_force()     
+               
            
 
        self.button_add_revenue = ctk.CTkButton(self.revenue_frame,text='', command=callback_button_add_revenue )
@@ -248,9 +255,6 @@ class AppHome(ctk.CTkToplevel):
        
        self.table_revenue.grid(column=0,row=1)
         
-        
-    
-
     
     def select_frame_by_name(self, name):
         # set button color for selected button

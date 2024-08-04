@@ -189,20 +189,23 @@ class AppLogin(ctk.CTkFrame):
             pass
         
         def verifica_user(event=None):
-            print(f"Usuário = {self.entry_user.get()}\n Senha = {self.entry_password.get()}")
+            #print(f"Usuário = {self.entry_user.get()}\n Senha = {self.entry_password.get()}")
             
             usuario_login = self.entry_user.get().strip() 
             password_login = self.entry_password.get().strip()
             louser = models.get_user(type='user',user=usuario_login)
+            try:
             
-            if usuario_login == usuario_login and password_login == louser[1]:
-                self.master_frame.master.withdraw()
-                home =  AppHome()
-                
-            else:
+                if usuario_login == usuario_login and password_login == louser[1]:
+                    self.master_frame.master.withdraw()
+                    home =  AppHome()
+                    
+                else:
+                    msg = CTkMessagebox(title="Warning", message="Usuário ou senha incorretos",
+                            icon="cancel", option_1="Okay")
+            except:
                 msg = CTkMessagebox(title="Warning", message="Usuário ou senha incorretos",
-                        icon="cancel", option_1="Okay")
-
+                            icon="cancel", option_1="Okay")
         
         def register_user(event=None):
             #AppRegister(self.master_frame).pack()
@@ -225,7 +228,7 @@ class AppLogin(ctk.CTkFrame):
         
         self.button_login = ctk.CTkButton(self, text="Login", command=click_login )
         
-        self.button_register = ctk.CTkButton(self,hover=False, text="Registrar",  command= register_user )
+        self.button_register = ctk.CTkButton(self,hover=False, text="Registrar",state=DISABLED, command= register_user )
         
         self.label_user.place(x=5,y=90)
         self.entry_user.place(x=5,y=115)
@@ -265,9 +268,7 @@ class AppRegister(ctk.CTkFrame):
                 self.entry_user.reset_default()
                 self.entry_password.reset_default()
                 self.entry_confirm_password.reset_default()
-                
-                #self.entry_confirm_password.password_input()
-                #self.entry_password.password_input()
+
                 
                 pass
             

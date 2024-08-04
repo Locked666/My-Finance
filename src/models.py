@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Date, ForeignKey, Text, BLOB
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Date, ForeignKey, Text, BLOB,Float,Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
@@ -75,11 +75,19 @@ class Receitas(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     empresa_id = Column(Integer, ForeignKey('empresa.id'))
     descricao = Column(String)
-    valor = Column(String)
-    data_pag = Column(Date)
-    data = Column(DateTime)
-    data_lanc = Column(DateTime)
+    valor = Column(Float)
+    data_pag = Column(Date, comment="Data do recebimento prevista")
+    recebido = Column(Boolean,comment="True para recebido, False para não recebido")
+    data = Column(DateTime, comment="Data do recebimento")
+    data_lanc = Column(DateTime, comment="Data do lançamento, realizado pelo sistema.")
     
+class Origem(Base):
+    __tablename__='origem_lanc'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    descricao = Column(String)
+    tipo_origem = Column(String, comment= "R = Receitas, D = Despesas, ")
+    
+        
 class Investimentos(Base):
     __tablename__ = 'investimentos'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -101,6 +109,17 @@ class MovimentacaoInvestimento(Base):
     tipo = Column(String)
     descricao = Column(String)
     data = Column(DateTime)
+    
+class MovimentacaoFinanceira(Base):
+    __tablename__='mov_financeira'
+    id = Column(Integer, primary_key=True, autoincrement=True) 
+    conta_id = Column(Integer,ForeignKey('contas_bancarias.id'))
+    tipo_lanc = Column(String,comment='D para Debito e C para credito')
+    Data_lanc = Column(Date, comment="Data no qual o valor será considerado")
+    Valor = Column(Float)
+    Data_log = Column(Date, comment="Data do log de lançamento")
+    Descricao_lanc = Column(String)
+     
 
 
 
@@ -139,9 +158,9 @@ def get_user(type:str,name:str = None,user:str= None,id:int=None):
    
 
 if __name__=='__main__':
-   a =  get_user(type="user",user='juliosales')
-   print(a)
-  
+#    a =  get_user(type="user",user='juliosales')
+#    print(a)
+  Base.metadata.create_all(bind=engine) 
 
           
     
