@@ -283,6 +283,12 @@ class AppRegister(ctk.CTkFrame):
                             email=email_user,
                             phone=phone_user
                             )
+                        models.new_bussines(
+                            razao=name_user,
+                            nomefantasia=name_user,
+                            document=None,
+                        )
+                        
                         msg = CTkMessagebox(title="Sucesso", message=f"Usuário foi cadastrado com sucesso !",
                         icon="check", option_1="Okay") 
                         back_login()

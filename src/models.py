@@ -5,8 +5,10 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime,date
 try:
     from config_app import MODE_DEBUG
+    from func import *
 except:
-    from .config_app import MODE_DEBUG    
+    from .config_app import MODE_DEBUG 
+    from .func import *   
 import os 
 from pathlib import Path
 
@@ -83,14 +85,14 @@ class Receitas(Base):
     valor = Column(Float)
     data_pag = Column(Date, comment="Data do recebimento prevista")
     recebido = Column(Boolean,comment="True para recebido, False para não recebido")
-    data = Column(DateTime, comment="Data do recebimento")
+    data = Column(Date, comment="Data do recebimento")
     data_lanc = Column(DateTime, comment="Data do lançamento, realizado pelo sistema.")
     
 class Origem(Base):
     __tablename__='origem_lanc'
     id = Column(Integer, primary_key=True, autoincrement=True)
     descricao = Column(String)
-    tipo_origem = Column(String, comment= "R = Receitas, D = Despesas, ")
+    tipo_origem = Column(String, comment= "R = Receitas, D = Despesas,RD = Receita e Despesa ")
     
         
 class Investimentos(Base):
@@ -118,7 +120,8 @@ class MovimentacaoInvestimento(Base):
 class MovimentacaoFinanceira(Base):
     __tablename__='mov_financeira'
     id = Column(Integer, primary_key=True, autoincrement=True) 
-    conta_id = Column(Integer,ForeignKey('contas_bancarias.id'))
+    conta_origem_id = Column(Integer,ForeignKey('contas_bancarias.id'))
+    origem_id = Column(Integer,nullable=False)
     tipo_lanc = Column(String,comment='D para Debito e C para credito')
     Data_lanc = Column(Date, comment="Data no qual o valor será considerado")
     Valor = Column(Float)
@@ -135,6 +138,18 @@ def new_user(bussines:int,name:str, user:str,password:str, email:str ='', phone:
     novo_usuario = Usuarios(empresa_id=bussines,nome=name,usuario=user,senha=password,email=email,telefone=phone,permissao=permission)
     session.add(novo_usuario)
     session.commit()
+    pass
+
+def new_bussines(razao:str,nomefantasia:str,document:str):
+    date_atual = r_date_atual('HoraMinuto')
+    
+    newempresa= Empresa(
+    razao_social = razao,
+    nome_fantasia = nomefantasia,
+    cnpj_cpf = document,
+    data_abertura = date_atual
+    )
+    
     pass
 
 def get_user(type:str=None,name:str = None,user:str= None,id:int=None):
@@ -168,25 +183,55 @@ def new_revenue(bussines:int,descricao:str, value:Float, datepag:str,recived:boo
         else:
             data_lanc_obj = datelanc
         
-    
-        nova_receita  = Receitas(
-            empresa_id=bussines,
-            descricao=descricao, 
-            valor=value,
-            data_pag=data_pag_obj, 
-            recebido=recived,
-            data=data_obj,
-            data_lanc=data_lanc_obj)
-        session.add(nova_receita)
-        session.commit()
-        return(True,nova_receita.id)
-        
+        try:
+            nova_receita  = Receitas(
+                empresa_id=bussines,
+                descricao=descricao, 
+                valor=value,
+                data_pag=data_pag_obj, 
+                recebido=recived,
+                data=data_obj,
+                data_lanc=data_lanc_obj)
+            session.add(nova_receita)
+            session.commit()
+            return(True,nova_receita.id)
+        except:
+            session.rollback()
     except  ValueError as e: 
         session.rollback()
         return (False, str(e))   
 
+def new_mov_financeira(conta:int, type_lanc:str, date_lanc:str, value:Float, descricao:str):
+    date_atual = r_date_atual('HoraMinuto')
     
-   
+    new_mov_finc = MovimentacaoFinanceira(    
+    conta_id = conta,
+    tipo_lanc = type_lanc,
+    Data_lanc = date_lanc,
+    Valor = value,
+    Data_log = date_atual,
+    Descricao_lanc = descricao
+    )
+
+
+def get_revenue(type:str = None, id:int = None):
+    list = []
+    
+    match type:
+        case "id":
+            return session.query(Receitas).filter_by(id=id).all()
+        
+        case _:
+            q = session.query(Receitas).all()
+            for i in q:
+                list.append([i.id,i.descricao,i.valor])              
+            
+
+            return list
+        
+
+    
+    pass   
 
 if __name__=='__main__':
     a = get_user(type='count')

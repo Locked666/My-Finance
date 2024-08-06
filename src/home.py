@@ -9,10 +9,12 @@ try :
     from .config_app import *
     from .form_revenue import FormRevenue
     from .form_expense import FormExpense
+    from .models import *
 except: 
     from config_app import *
     from form_revenue import FormRevenue
-    from form_expense import FormExpense   
+    from form_expense import FormExpense  
+    from models import * 
 
 class AppHome(ctk.CTkToplevel):
     def __init__(self, *args, fg_color: str | Tuple[str, str] | None = None, **kwargs):
@@ -228,12 +230,9 @@ class AppHome(ctk.CTkToplevel):
            #print(f"varavel value row, colum selected : {self.table_revenue.select(row=e['row'],column=e['column'])}")
            
        self.ctkbox = ctk.CTkCheckBox(self.revenue_frame,text=())     
-       value = [[1,2,3,4,5],
-                [6,7,8,9,10],
-                [11,12,13,14,15],
-                [16,17,18,19,20],
-                [21,22,23,24,25]]
-
+       value = get_revenue()
+       calue_query = get_revenue()
+       
         
             
        def callback_button_add_revenue():

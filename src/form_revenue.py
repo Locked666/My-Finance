@@ -214,11 +214,19 @@ class FormRevenue(ctk.CTkToplevel):
        [7, "Continue_true_execut"]
         ]
         
+        valor = str(self.value_revenue_data)
+        valor = valor[:-3]
+        valor = valor.replace(',','')
+        valor = int(valor)
+        
         for index,i in enumerate(widgets):
 
             match index:
                 case 0:
-                    if self.value_revenue_data  :
+                    if self.value_revenue_data :
+                        if valor <= 0:
+                            error_log.append('O valor não pode ser menor que zero')
+                            
                         pass
                     else: 
                         self.entry_value_revenue.configure(fg_color=('#8B0000'))
@@ -233,7 +241,6 @@ class FormRevenue(ctk.CTkToplevel):
                     else:
                         error_log.append('O campo data não pode estar Vazio') 
                         
-                
                 case 2:
                     if self.descri_revenue_data:
                         pass
@@ -241,14 +248,12 @@ class FormRevenue(ctk.CTkToplevel):
                     else:
                         error_log.append("O campo descrição não pode estar vazio")
                         
-                
-                case 3,4,5:
-                    pass
-
                 case 6:
                     if len(error_log) == 0 :
-                        self._save_revenue_data()
-                        print("teste_save")
+                        if self.id_revenue:
+                            self._alter_save_revenue_data()
+                        else:    
+                            self._save_revenue_data()
                     else:
                         for i in error_log:
                             if erro_format == "":
@@ -263,16 +268,21 @@ class FormRevenue(ctk.CTkToplevel):
     
     def _save_revenue_data(self):
         
-        
+        valor = str(self.value_revenue_data)
+        valor = valor[:-3]
+        valor = valor.replace(',','')
+        valor = float(valor)
+
         date_revenue =  convert_date(self.date_revenue_data)
         if self.switch_revenue_data == 0:
             recived = True
         else:
             recived = False
+            
         add = new_revenue(
             bussines=1,
             descricao=self.descri_revenue_data, 
-            value=self.value_revenue_data.replace(',','.'), 
+            value=valor, 
             datepag=date_revenue,
             recived=recived, 
             date = date_revenue, 
@@ -288,6 +298,9 @@ class FormRevenue(ctk.CTkToplevel):
                sg = CTkMessagebox(title="Erro", message=f"Erro ao Salvar receita.\n {add[1]} !!!",
                             icon="cancel", option_1="Okay") 
         
+
+    def _alter_save_revenue_data(self): 
+        pass
         
     
     def _add_revenue_info(self): 
