@@ -203,51 +203,77 @@ class AppHome(ctk.CTkToplevel):
     def _layout_display_revenue(self):
 
        def returno(e=None):
+           
            a = self.table_revenue.get()
            b= self.table_revenue.get_selected_row()
            c = self.table_revenue.get_selected_column()
-           
-           print(f"get: {a}")
-           print('----------------------------------------------')
-           print(f"get_selected_row: {b}")
-           print('----------------------------------------------')
-           print(f"get_selected_column: {c}")
-           print('----------------------------------------------')
-           print(f"varavel retornada : {e}")
-           print('----------------------------------------------')
-           print(f"varavel value : {e['value']}")
-           print('----------------------------------------------')
-           print(f"varavel value row : {e['row']}")
-           print('----------------------------------------------')
-           print(f"varavel value row, colum selected : {self.table_revenue.get(row=e['row'])}")
-           print('----------------------------------------------')
-           print(f"varavel value row: {self.table_revenue.get_row(row=e['row'])}")
-           self.table_revenue.draw_table()
-           self.table_revenue.select_row(row=e['row'])
-           print('--------------------------------------------')
-           
+           if e['row'] != 0 :
+               if self.row_select == '':
+                    print('----------------------------------------------')
+                    print(f"varavel value : {e['value']}")
+                    print('----------------------------------------------')
+                    print(f"varavel value row : {e['row']}")
+                    print('----------------------------------------------')
+
+                    print('----------------------------------------------')
+                    print(f"varavel value row: {self.table_revenue.get_row(row=e['row'])}")
+                    self.table_revenue.select_row(row=e['row'])
+                    self.row_select = e['row']
+                    print(self.row_select)
+                   
+                    print('--------------------------------------------')
+                    
+               else:
+                   self.table_revenue.deselect_row(row=self.row_select)
+                   self.table_revenue.select_row(row=e['row'])
+                   self.row_select = e['row']
+                      
+                
+                
+            
            
            #print(f"varavel value row, colum selected : {self.table_revenue.select(row=e['row'],column=e['column'])}")
            
-       self.ctkbox = ctk.CTkCheckBox(self.revenue_frame,text=())     
+       self.ctkbox = ctk.CTkCheckBox(self.revenue_frame,text=())   
+       table_coluns = [["Numero","Descricao","Valor","Data da Receita","Recebido"]] 
+               
        value = get_revenue()
-       calue_query = get_revenue()
-       
+       print(value)
+       def format_values(data):
+        formatted_data = []
+        for item in data:
+            # Copia o item original para uma nova lista, mas formata o número
+            new_item = [item[0], item[1], "{:.2f}".format(item[2]).replace('.', ','), convert_date(item[3],type="PtBR"),item[4]]
+            formatted_data.append(new_item)
+        return formatted_data
+       calue_query = format_values(value)
+       teste = table_coluns
+       for i in calue_query: table_coluns.append(i)
+    #    print(calue_query)
+    #    print(table_coluns)
+       print(teste)
+      
         
             
        def callback_button_add_revenue():
            if self.app_revenue is None or not self.app_revenue.winfo_exists():
             self.app_revenue = FormRevenue(master=self.revenue_frame)
+            print('teste')
            else:
                self.app_revenue.focus() 
-           
-           
-               
-           
 
        self.button_add_revenue = ctk.CTkButton(self.revenue_frame,text='', command=callback_button_add_revenue )
        
-       self.table_revenue = CTkTable(self.revenue_frame,values=value,hover=True,hover_color='#000000',command=returno)
+       self.table_revenue = CTkTable(self.revenue_frame,values=teste,bg_color="transparent" ,command=returno)
+       
+       self.row_select = ''
+       
+       self.table_revenue.edit(row=0,column=0,fg_color='#1C1C1C',hover=False)
+       self.table_revenue.edit(row=0,column=1,fg_color='#1C1C1C',hover=False)
+       self.table_revenue.edit(row=0,column=2,fg_color='#1C1C1C',hover=False)
+
+       
+       
        
        
        self.button_add_revenue.grid(row=0)

@@ -4,11 +4,20 @@ from datetime import *
 
 
 
-def convert_date(date):
-    date_origim = date
-    data_convertida =  datetime.strptime(date_origim,"%d/%m/%Y")
-    data_formatada = data_convertida.strftime("%Y-%m-%d")
-    return data_formatada
+def convert_date(date,type=None):
+    match type:
+        case "PtBR":
+            date_origim = date
+            data_convertida =  datetime.strptime(date_origim,"%Y-%m-%d")
+            data_formatada = data_convertida.strftime("%d/%m/%Y")
+            return data_formatada
+            
+        
+        case _:    
+            date_origim = date
+            data_convertida =  datetime.strptime(date_origim,"%d/%m/%Y")
+            data_formatada = data_convertida.strftime("%Y-%m-%d")
+            return data_formatada
     
 def r_date_atual(type='database'):
     a  = datetime.today()

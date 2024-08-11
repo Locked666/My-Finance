@@ -174,8 +174,8 @@ class FormRevenue(ctk.CTkToplevel):
         self.button_back_revenue.grid(row=9, column=1,sticky="w", columnspan=2, padx=5, pady=5)
         
         #self.switch_revenue_data
-        self.entry_value_revenue.bind('<Return>',lambda event=None: self.entry_date_revenue.focus())
-        self.entry_value_revenue.bind("<KeyRelease>",lambda event=None:self._format_value(widget=self.entry_value_revenue))
+        #self.entry_value_revenue.bind('<Return>',lambda event=None: self.entry_date_revenue.focus())
+        #self.entry_value_revenue.bind("<KeyRelease>",lambda event=None:self._format_value(widget=self.entry_value_revenue))
         
         self.entry_date_revenue.bind("<Return>",lambda event=None: self._format_date(widget=self.entry_date_revenue))
         self.entry_date_revenue.bind("<Return>",lambda event=None: self.entry_descri_revenue.focus())
@@ -269,8 +269,8 @@ class FormRevenue(ctk.CTkToplevel):
     def _save_revenue_data(self):
         
         valor = str(self.value_revenue_data)
-        valor = valor[:-3]
-        valor = valor.replace(',','')
+        # valor = valor[:-3]
+        valor = valor.replace(',','.')
         valor = float(valor)
 
         date_revenue =  convert_date(self.date_revenue_data)

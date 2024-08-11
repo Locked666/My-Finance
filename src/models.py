@@ -214,17 +214,17 @@ def new_mov_financeira(conta:int, type_lanc:str, date_lanc:str, value:Float, des
     )
 
 
-def get_revenue(type:str = None, id:int = None):
+def get_revenue(type:str = None, id:int = None, order :str = 'Desc'):
     list = []
     
     match type:
         case "id":
-            return session.query(Receitas).filter_by(id=id).all()
+            return session.query(Receitas).filter_by(id=id).order_by().all()
         
         case _:
             q = session.query(Receitas).all()
             for i in q:
-                list.append([i.id,i.descricao,i.valor])              
+                list.append([i.id,i.descricao,i.valor,i.data,i.recebido])              
             
 
             return list
